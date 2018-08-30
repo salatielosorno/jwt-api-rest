@@ -12,14 +12,14 @@ router.get('/private', middleware.ensureAuthenticated, whateverYouNeedToDo);
 function login(req,res){
     try {
         if(!req.body.email || !req.body.pass)
-        return res.status(500).send({message:'Missing data necessary'});
+        return res.status(400).send({message:'Missing data necessary'});
 
         User.findOne({email:req.body.email}, (err, user)=>{
             if(err)
-                return res.status(500).send({message:'Authentication failed. User not found.'});
+                return res.status(401).send({message:'Authentication failed. User not found.'});
             
             if(user.pass != req.body.pass)
-                return res.status(500).send({message: 'Authentication failed. Wrong password.'})
+                return res.status(401).send({message: 'Authentication failed. Wrong password.'})
 
             var token = service.createToken({ _id:user.id});
             
